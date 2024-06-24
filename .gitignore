@@ -3,3 +3,6 @@
 ################################################################################
 
 /backend/appsettings.json
+/backend/.vs
+/backend/bin
+/backend/obj
