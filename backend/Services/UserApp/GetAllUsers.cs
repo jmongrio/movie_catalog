@@ -2,6 +2,7 @@
 using backend.Models.ENUM;
 using backend.Models.Response;
 using backend.Models.UserApp;
+using backend.Utils;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,18 +11,24 @@ namespace backend.Services.UserApp
     public class GetAllUsers
     {
         private readonly MovieCatalogContext _context;
+        private readonly LogManager _logger;
+
         public GetAllUsers(
-            MovieCatalogContext context)
+            MovieCatalogContext context,
+            LogManager logger)
         {
             _context = context;
+            _logger = logger;
         }
 
-        public async Task<IActionResult> GetUsers()
+        public async Task<IActionResult> GetUsers(HttpContext httpContext)
         {
-            GeneralResponse<List<UserModel>> response = new();
+            GeneralResponse<IEnumerable<UserModel>> response = new();
             try
             {
-                List<UserModel> users =
+                _logger.LogStart(httpContext);
+
+                IEnumerable<UserModel> users =
                 await _context.Users.Where(x =>
                                                 x.Status.Equals(ENTITY_STATUS.ACTIVE))
                                     .Include(x => x.IdRolNavigation)
@@ -33,13 +40,13 @@ namespace backend.Services.UserApp
                                         Email = x.Email,
                                         Rol = x.IdRolNavigation!.Name
                                     })
-                                    .ToListAsync();
+                                    .ToArrayAsync();
 
-                if (users is null)
+                if (!users.Any())
                 {
                     response = new()
                     {
-                        StatusCode = 400,
+                        StatusCode = 404,
                         Message = "Users not found",
                         Object = null
                     };
@@ -54,16 +61,21 @@ namespace backend.Services.UserApp
                 };
                 return new OkObjectResult(response);
             }
-            catch (Exception error)
+            catch (Exception ex)
             {
+                _logger.LogError(httpContext, ex.Message);
                 response = new()
                 {
                     StatusCode = 500,
-                    Message = error.Message,
+                    Message = ex.Message,
                     Object = null
                 };
 
                 return new ObjectResult(response);
+            }
+            finally
+            {
+                _logger.LogEnd(httpContext);
             }
         }
     }

@@ -1,4 +1,6 @@
 using backend.DBContext;
+using backend.Services.UserApp;
+using backend.Utils;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 
@@ -20,12 +22,17 @@ Log.Logger =
         .CreateLogger();
 
 builder.Host.UseSerilog();
+builder.Services.AddSingleton<LogManager>();
 #endregion
 
 #region Database
 var connectionString = builder.Configuration.GetConnectionString("SQLServerConnection");
 builder.Services.AddDbContext<MovieCatalogContext>(options =>
     options.UseSqlServer(connectionString));
+#endregion
+
+#region DI User
+builder.Services.AddTransient<GetAllUsers>();
 #endregion
 
 var app = builder.Build();
