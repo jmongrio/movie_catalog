@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace backend.Models;
+namespace backend.Entities;
 
-public partial class Cast
+public partial class Rol
 {
     public int Id { get; set; }
 
@@ -13,5 +13,5 @@ public partial class Cast
 
     public int? Status { get; set; }
 
-    public virtual ICollection<MovieCast> MovieCasts { get; set; } = new List<MovieCast>();
+    public virtual ICollection<User> Users { get; set; } = new List<User>();
 }

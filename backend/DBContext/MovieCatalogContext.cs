@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
-using backend.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using backend.Entities;
 
 namespace backend.DBContext;
 

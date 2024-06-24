@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace backend.Models;
+namespace backend.Entities;
 
 public partial class MovieCast
 {

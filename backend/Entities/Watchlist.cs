@@ -1,19 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace backend.Models;
+namespace backend.Entities;
 
-public partial class MovieCategory
+public partial class Watchlist
 {
     public int Id { get; set; }
 
+    public int? IdUser { get; set; }
+
     public int? IdMovie { get; set; }
 
-    public int? IdCategory { get; set; }
+    public DateTime? CreatedAt { get; set; }
 
     public int? Status { get; set; }
 
-    public virtual Category? IdCategoryNavigation { get; set; }
-
     public virtual Movie? IdMovieNavigation { get; set; }
+
+    public virtual User? IdUserNavigation { get; set; }
 }
