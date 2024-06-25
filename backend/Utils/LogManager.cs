@@ -15,18 +15,18 @@ namespace backend.Utils
 
         public void LogError(HttpContext httpContext, string message)
         {
-            _logger.LogError($"{httpContext.TraceIdentifier} An error has occurred {message}");
+            _logger.LogError($"{httpContext.TraceIdentifier} - An error has occurred {message}");
         }
 
-        public void LogInformation(string message)
+        public void LogInformation(HttpContext httpContext, string message)
         {
-            _logger.LogInformation(message);
+            _logger.LogInformation($"{httpContext.TraceIdentifier} - {message}");
         }
 
-        public void LogObjectInformation(object obj)
+        public void LogObjectInformation(HttpContext httpContext, object obj)
         {
             string objectTxt = JsonSerializer.Serialize(obj);
-            _logger.LogInformation($"The object has the following value: {objectTxt}");
+            _logger.LogInformation($"{httpContext.TraceIdentifier} - The object has the following value: {objectTxt}");
         }
 
         public void LogStart(HttpContext httpContext, [CallerMemberName] string methodName = "")
