@@ -31,9 +31,18 @@ builder.Services.AddDbContext<MovieCatalogContext>(options =>
     options.UseSqlServer(connectionString));
 #endregion
 
+#region Utils
+builder.Services.AddTransient<HttpContextUtils>();
+builder.Services.AddTransient<JsonManager>();
+builder.Services.AddTransient<Security>();
+#endregion
+
 #region DI User
 builder.Services.AddTransient<GetAllUsers>();
+builder.Services.AddTransient<GetUserById>();
+builder.Services.AddTransient<PostNewUser>();
 #endregion
+
 
 var app = builder.Build();
 

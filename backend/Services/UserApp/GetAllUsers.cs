@@ -67,7 +67,7 @@ namespace backend.Services.UserApp
                 response = new()
                 {
                     StatusCode = 500,
-                    Message = ex.Message,
+                    Message = $"TraceId: {httpContext.TraceIdentifier} \nAn error occurred while obtaining users",
                     Object = null
                 };
 
