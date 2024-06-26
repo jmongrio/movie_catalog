@@ -9,5 +9,8 @@ namespace backend.Controllers
     {
         [HttpPost("Login")]
         public async Task<IActionResult> Auth([FromServices] Login service) => await service.Auth(HttpContext);
+
+        [HttpPost("Signup")]
+        public async Task<IActionResult> Register([FromServices] Signup service) => await service.Register(HttpContext);
     }
 }

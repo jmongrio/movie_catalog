@@ -83,6 +83,7 @@ builder.Services.AddTransient<PostNewUser>();
 
 #region DI Access
 builder.Services.AddTransient<Login>();
+builder.Services.AddTransient<Signup>();
 #endregion
 
 var app = builder.Build();
