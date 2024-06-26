@@ -1,6 +1,5 @@
 ﻿using backend.DBContext;
 using backend.Entities;
-using backend.Models.ENUM;
 using backend.Models.Response;
 using backend.Models.UserApp;
 using backend.Utils;
@@ -8,14 +7,14 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace backend.Services.UserApp
 {
-    public class PostNewUser
+    public class PutUser
     {
         private readonly MovieCatalogContext _context;
         private readonly LogManager _logger;
         private readonly HttpContextUtils _httpUtils;
         private readonly Security _security;
 
-        public PostNewUser(
+        public PutUser(
             MovieCatalogContext context,
             LogManager logger,
             HttpContextUtils httpUtils,
@@ -27,47 +26,56 @@ namespace backend.Services.UserApp
             _security = security;
         }
 
-        public async Task<IActionResult> NewUser(HttpContext httpContext)
+        public async Task<IActionResult> EditUser(HttpContext httpContext)
         {
             GeneralResponse<UserModel> response = new();
             try
             {
                 _logger.LogStart(httpContext);
 
-                User user = await _httpUtils.GetBodyRequest<User>(httpContext);
-                user.Password = _security.HashPassword(user.Password!);
-                user.Status = ENTITY_STATUS.ACTIVE;
-                user.CreatedAt = DateTime.UtcNow.AddHours(-6);
-                _logger.LogObjectInformation(httpContext, user);
+                User userEdit = await _httpUtils.GetBodyRequest<User>(httpContext);
+                _logger.LogObjectInformation(httpContext, userEdit);
 
-                if (user is null)
+                int id = _httpUtils.GetIntParam(httpContext, "id");
+                _logger.LogInformation(httpContext, $"Searching user with id: {id}");
+                if (id.Equals(0))
                 {
-                    _logger.LogInformation(httpContext, "Invalid user data");
                     response = new()
                     {
                         StatusCode = 400,
-                        Message = "Invalid user data",
+                        Message = "Invalid user id",
                         Object = null
                     };
+                    return new OkObjectResult(response);
+                }
+                
+                User? user = await _context.Users.FindAsync(id);
+                _logger.LogObjectInformation(httpContext, user);
+                if (user is null)
+                {
+                    response = new()
+                    {
+                        StatusCode = 404,
+                        Message = "User not found",
+                        Object = null
+                    };
+                    return new OkObjectResult(response);
                 }
 
-                await _context.Users.AddAsync(user!);
+                user = userEdit;
                 await _context.SaveChangesAsync();
-                _logger.LogInformation(httpContext, "User created successfully");
-
-                UserModel userCreated = new()
-                {
-                    FirstName = user!.FirstName,
-                    LastName = user.LastName,
-                    Email = user.Email,
-                    Rol = user.IdRolNavigation!.Name
-                };
 
                 response = new()
                 {
-                    StatusCode = 201,
-                    Message = "User created successfully",
-                    Object = userCreated
+                    StatusCode = 204,
+                    Message = "User edited successfully",
+                    Object = new UserModel()
+                    {
+                        Id = user.Id,
+                        FirstName = user.FirstName,
+                        LastName = user.LastName,
+                        Email = user.Email
+                    }
                 };
                 return new OkObjectResult(response);
             }
@@ -77,7 +85,7 @@ namespace backend.Services.UserApp
                 response = new()
                 {
                     StatusCode = 500,
-                    Message = $"TraceId: {httpContext.TraceIdentifier} \nAn error occurred while creating user",
+                    Message = $"TraceId: {httpContext.TraceIdentifier} \nAn error occurred while editing user",
                     Object = null
                 };
                 return new OkObjectResult(response);

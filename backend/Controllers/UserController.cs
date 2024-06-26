@@ -15,5 +15,8 @@ namespace backend.Controllers
 
         [HttpPost]
         public async Task<IActionResult> PostNewUser([FromServices] PostNewUser service) => await service.NewUser(HttpContext);
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutUser([FromServices] PutUser service) => await service.EditUser(HttpContext);
     }
 }

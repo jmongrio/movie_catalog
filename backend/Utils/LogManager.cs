@@ -23,7 +23,7 @@ namespace backend.Utils
             _logger.LogInformation($"{httpContext.TraceIdentifier} - {message}");
         }
 
-        public void LogObjectInformation(HttpContext httpContext, object obj)
+        public void LogObjectInformation(HttpContext httpContext, object? obj)
         {
             string objectTxt = JsonSerializer.Serialize(obj);
             _logger.LogInformation($"{httpContext.TraceIdentifier} - The object has the following value: {objectTxt}");

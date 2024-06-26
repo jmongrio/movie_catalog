@@ -1,4 +1,6 @@
-﻿namespace backend.Entities;
+﻿using backend.Models.ENUM;
+
+namespace backend.Entities;
 
 public partial class User
 {
@@ -16,7 +18,7 @@ public partial class User
 
     public DateTime? CreatedAt { get; set; }
 
-    public int? Status { get; set; }
+    public ENTITY_STATUS Status { get; set; }
 
     public virtual Rol? IdRolNavigation { get; set; }
 
