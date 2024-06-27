@@ -1,8 +1,10 @@
-﻿using backend.Entities;
+﻿using Azure.Core;
+using backend.Entities;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using static System.Net.WebRequestMethods;
 
 namespace backend.Utils
 {
@@ -45,12 +47,14 @@ namespace backend.Utils
 
         public void CreateCookie(HttpContext httpContext, string token)
         {
-            httpContext.Response.Cookies.Append("AT", token, new CookieOptions
+            httpContext.Response.Cookies.Append("__Secure-AT", token, new CookieOptions
             {
                 HttpOnly = true,
                 Secure = true,
                 SameSite = SameSiteMode.None,
-                Expires = DateTime.UtcNow.AddHours(1)
+                Expires = DateTime.UtcNow.AddHours(1),
+                Path = "/",
+                Domain = "https://localhost:5173"
             });
         }
     }
