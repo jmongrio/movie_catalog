@@ -1,6 +1,9 @@
 import { Link } from 'react-router-dom';
+import { useAuth } from '../Auth/AuthProvider';
 
 export default function NavbarComponent() {
+  const { isAuthenticated } = useAuth();
+
   return (
     <header className="p-3 bg-dark text-white">
       <div className="container">
@@ -11,11 +14,18 @@ export default function NavbarComponent() {
             <li><Link to={"/user"} className="nav-link px-2 text-white">Users</Link></li>
           </ul>
 
-          <div className="text-end">
-            <Link to={"/login"} className="btn btn-outline-light me-2">Login</Link>
-            <Link to={"/signup"} className="btn btn-warning">Sign-up</Link>
-          </div>
-
+          {
+            isAuthenticated ? (
+              <div className="text-end">
+                <Link to={"/"} className="btn btn-outline-light me-2">Logout</Link>
+              </div>
+            ) : (
+              <div className="text-end">
+                <Link to={"/login"} className="btn btn-outline-light me-2">Login</Link>
+                <Link to={"/signup"} className="btn btn-warning">Sign-up</Link>
+              </div>
+            )
+          }
         </div>
       </div>
     </header>

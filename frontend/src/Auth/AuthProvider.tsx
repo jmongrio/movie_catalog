@@ -6,14 +6,14 @@ interface AuthProviderProps {
 }
 
 const AuthContext = createContext({
-    isAuthenticated: false,
+    isAuthenticated: false
 });
 
 export function AuthProvider({ children }: AuthProviderProps) {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
 
     useEffect(() => {
-        const token = Cookie.get('__Secure-AT')
+        const token = Cookie.get('AT')
 
         if (token) {
             setIsAuthenticated(true);

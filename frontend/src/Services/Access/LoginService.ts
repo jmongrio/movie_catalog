@@ -9,8 +9,8 @@ export class LoginService {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'credentials': 'include'
             },
+            credentials: 'include',
             body: JSON.stringify(loginData)
         })
         .then((response: Response) => {
