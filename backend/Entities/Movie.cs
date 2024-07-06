@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using backend.Models.ENUM;
 
 namespace backend.Entities;
 
@@ -25,7 +24,7 @@ public partial class Movie
 
     public DateTime? CreatedAt { get; set; }
 
-    public int? Status { get; set; }
+    public ENTITY_STATUS? Status { get; set; }
 
     public virtual ICollection<MovieCast> MovieCasts { get; set; } = new List<MovieCast>();
 
