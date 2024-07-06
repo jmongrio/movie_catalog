@@ -2,17 +2,17 @@ import { UserService } from "../Services/UserService";
 import { UserModel } from "../Models/UserModel";
 import { GeneralResponse } from "../Models/Response/GeneralResponse";
 import Swal from "sweetalert2";
-import NavbarComponent from "../Components/NavbarComponent";
 import { useEffect, useState } from "react";
-import { Link, Navigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useAuth } from "../Auth/AuthProvider";
 
 export function Users() {
     const userService = new UserService();
     const [users, setUsers] = useState<UserModel[]>();
-    const { isAuthenticated } = useAuth();
+    const { setLoading } = useAuth();
 
     const fetchData = async () => {
+        setLoading(true);
         await userService.GetAll().then((response: GeneralResponse<UserModel[]>) => {
             if (response.StatusCode == 200) {
                 setUsers(response.Object);
@@ -43,20 +43,15 @@ export function Users() {
                 confirmButtonText: 'Ok'
             })
         });
+        setLoading(false);
     };
 
     useEffect(() => {
-        if (isAuthenticated) {
-            fetchData();
-        }
-        else {
-            <Navigate to="/login"></Navigate>
-        }
+        fetchData();
     }, []);
 
     return (
         <>
-            <NavbarComponent />
             <div className="container">
                 <h1>Users</h1 >
                 <div className="table-responsive bg-light p-4 rounded">
