@@ -10,8 +10,8 @@ export class SignupService {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Credentials': 'include'
             },
+            credentials: 'include',
             body: JSON.stringify(user)
         })
         .then((response) => {

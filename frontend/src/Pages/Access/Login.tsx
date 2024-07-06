@@ -1,31 +1,30 @@
 import { Button, Form } from "react-bootstrap";
 import NavbarComponent from "../../Components/NavbarComponent";
-import { Navigate } from "react-router-dom";
-import { useAuth } from "../../Auth/AuthProvider";
 import { LoginModel } from "../../Models/Access/LoginModel";
 import { LoginService } from "../../Services/Access/LoginService";
 import { GeneralResponse } from "../../Models/Response/GeneralResponse";
-import React from "react";
 import Swal from "sweetalert2";
+import { Navigate } from "react-router-dom";
+import { useAuth } from "../../Auth/AuthProvider";
 
 export function Login() {
     const loginAuth = new LoginService();
+    const {isAuthenticated, setLoading} = useAuth();
 
     const submitForm = async (e: React.FormEvent<HTMLFormElement>) => {
+        console.log('submitForm')
         e.preventDefault()
         const formData = new FormData(e.currentTarget)
         const data = Object.fromEntries(formData)
-
+        
         const login: LoginModel = {
             Email: String(data.email),
             Password: String(data.password)
         }
-
-        console.log(login)
-
-        const response = await loginAuth.Auth(login).then((response: GeneralResponse<LoginModel>) => {
-            console.log(response)
-            if(response.StatusCode == 200){
+        
+        setLoading(true)
+        await loginAuth.Auth(login).then((response: GeneralResponse<LoginModel>) => {
+            if (response.StatusCode == 200) {
                 Swal.fire({
                     title: 'Success',
                     text: response.Message,
@@ -33,16 +32,16 @@ export function Login() {
                     confirmButtonText: 'Ok'
                 })
             }
-            else{
-                if(response.StatusCode == 500){
+            else {
+                if (response.StatusCode == 500) {
                     Swal.fire({
                         title: 'Error',
                         text: response.Message,
                         icon: 'error',
                         confirmButtonText: 'Ok'
-                    })                
+                    })
                 }
-                else{
+                else {
                     Swal.fire({
                         title: 'Warning',
                         text: response.Message,
@@ -51,20 +50,13 @@ export function Login() {
                     })
                 }
             }
-            
-            console.log("Paso")
         })
+        setLoading(false)
+    } 
 
-        // window.location.href = "/protected";
-    }
+    
 
-    const auth = useAuth();
-
-    if (auth.isAuthenticated) {
-        return <Navigate to="/protected" />
-    }
-
-    return (
+    return isAuthenticated ? <Navigate to="/dashboard/user" /> : (
         <>
             <NavbarComponent />
             <div className="container fluid mt-5">

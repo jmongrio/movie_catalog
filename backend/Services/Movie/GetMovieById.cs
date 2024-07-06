@@ -1,4 +1,5 @@
-﻿using backend.DBContext;
+﻿using Azure;
+using backend.DBContext;
 using backend.Models.ENUM;
 using backend.Models.Response;
 using backend.Models.UserApp;
@@ -6,15 +7,15 @@ using backend.Utils;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace backend.Services.UserApp
+namespace backend.Services.Movie
 {
-    public class GetUserById
+    public class GetMovieById
     {
         private readonly MovieCatalogContext _context;
         private readonly LogManager _logger;
         private readonly HttpContextUtils _httpUtils;
 
-        public GetUserById(
+        public GetMovieById(
             MovieCatalogContext context,
             LogManager logger,
             HttpContextUtils httpUtils)
@@ -26,49 +27,40 @@ namespace backend.Services.UserApp
 
         public async Task<IActionResult> GetById(HttpContext httpContext)
         {
-            GeneralResponse<UserModel> response = new();
+            GeneralResponse<Entities.Movie> response = new();
             try
             {
                 _logger.LogStart(httpContext);
 
                 int id = _httpUtils.GetIntParam(httpContext, "id");
-                _logger.LogInformation(httpContext, $"Searching user with id: {id}");
+                _logger.LogInformation(httpContext, $"Searching movie with id: {id}");
 
-                UserModel? user =
-                    await _context.Users.Where(x =>
-                                                    x.Id.Equals(id) &&
-                                                    x.Status.Equals(ENTITY_STATUS.ACTIVE))
-                                        .Select(x =>
-                                                    new UserModel
-                                                    {
-                                                        Id = x.Id,
-                                                        FirstName = x.FirstName,
-                                                        LastName = x.LastName,
-                                                        Email = x.Email,
-                                                        Rol = x.IdRolNavigation!.Name
-                                                    })
-                                        .FirstOrDefaultAsync();
-                _logger.LogObjectInformation(httpContext, user);
+                Entities.Movie? movie =
+                    await _context.Movies.Where(x => 
+                                                    x.Status.Equals(ENTITY_STATUS.ACTIVE) && 
+                                                    x.Id.Equals(id))
+                                         .FirstOrDefaultAsync();
+                _logger.LogObjectInformation(httpContext, movie);
 
-                if (user is null)
+                if (movie is null)
                 {
-                    _logger.LogInformation(httpContext, "User not found");
+                    _logger.LogInformation(httpContext, "Movie not found");
                     response = new()
                     {
                         StatusCode = 404,
-                        Message = "User not found",
+                        Message = "Movie not found",
                         Object = null
                     };
+
                     return new OkObjectResult(response);
                 }
 
                 response = new()
                 {
                     StatusCode = 200,
-                    Message = "User found",
-                    Object = user
+                    Message = "Success",
+                    Object = movie!
                 };
-
                 return new OkObjectResult(response);
             }
             catch (Exception ex)
@@ -77,7 +69,7 @@ namespace backend.Services.UserApp
                 response = new()
                 {
                     StatusCode = 500,
-                    Message = $"TraceId: {httpContext.TraceIdentifier} \nAn error occurred while obtaining user by id",
+                    Message = $"TraceId: {httpContext.TraceIdentifier} \nAn error occurred while obtaining movie by id",
                     Object = null
                 };
 

@@ -1,5 +1,6 @@
 using backend.DBContext;
 using backend.Services.Access;
+using backend.Services.Movie;
 using backend.Services.UserApp;
 using backend.Utils;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -18,10 +19,11 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 #region CORS
+string corsOrigin = builder.Configuration["CorsOrigin:Url"]!;
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowSpecificOrigin",
-        builder => builder.WithOrigins("https://localhost:5173")
+        builder => builder.WithOrigins("https://localhost:5173", "https://localhost:7221")
             .AllowAnyHeader()
             .AllowCredentials()
             .AllowAnyMethod());
@@ -44,7 +46,7 @@ builder.Services.AddAuthentication(options =>
             ValidateIssuerSigningKey = true,
             ValidIssuer = builder.Configuration["JWT:Issuer"],
             ValidAudience = builder.Configuration["JWT:Audience"],
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Key"]))
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Key"]!))
         };
         options.Events = new JwtBearerEvents
         {
@@ -97,14 +99,33 @@ builder.Services.AddTransient<Login>();
 builder.Services.AddTransient<Signup>();
 #endregion
 
+#region DI Movie
+builder.Services.AddTransient<GetAllMovies>();
+builder.Services.AddTransient<GetMovieById>();
+builder.Services.AddTransient<PostNewMovie>();
+builder.Services.AddTransient<PutMovie>();
+#endregion
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+//if (app.Environment.IsDevelopment())
+//{
+//    app.UseSwagger();
+//    app.UseSwaggerUI();
+//}
+
+app.Use(async (context, next) =>
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+    await next();
+    if (context.Response.Equals(404) && !System.IO.Path.HasExtension(context.Request.Path.Value))
+    {
+        context.Request.Path = "/index.html";
+        await next();
+    }
+});
+app.UseDefaultFiles();
+app.UseStaticFiles();
 
 app.UseCors("AllowSpecificOrigin");
 

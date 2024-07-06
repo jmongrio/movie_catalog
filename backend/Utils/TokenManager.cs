@@ -47,14 +47,14 @@ namespace backend.Utils
 
         public void CreateCookie(HttpContext httpContext, string token)
         {
-            httpContext.Response.Cookies.Append("__Secure-AT", token, new CookieOptions
+            httpContext.Response.Cookies.Append("AT", token, new CookieOptions
             {
-                HttpOnly = true,
-                Secure = true,
-                SameSite = SameSiteMode.None,
+                //HttpOnly = true,
+                //Secure = true,
+                SameSite = SameSiteMode.Strict,
                 Expires = DateTime.UtcNow.AddHours(1),
                 Path = "/",
-                Domain = "https://localhost:5173"
+                Domain = "localhost"
             });
         }
     }
