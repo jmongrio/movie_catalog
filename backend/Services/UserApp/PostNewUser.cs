@@ -47,6 +47,7 @@ namespace backend.Services.UserApp
                         Message = "Invalid user data",
                         Object = null
                     };
+                    return new ObjectResult(response);
                 }
 
                 User? userFind = await _context.Users.FirstOrDefaultAsync(u => u.Email == user!.Email);
