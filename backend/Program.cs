@@ -1,5 +1,6 @@
 using backend.DBContext;
 using backend.Services.Access;
+using backend.Services.Cast;
 using backend.Services.Movie;
 using backend.Services.UserApp;
 using backend.Utils;
@@ -104,6 +105,13 @@ builder.Services.AddTransient<GetAllMovies>();
 builder.Services.AddTransient<GetMovieById>();
 builder.Services.AddTransient<PostNewMovie>();
 builder.Services.AddTransient<PutMovie>();
+#endregion
+
+#region DI Cast
+builder.Services.AddTransient<GetAllCast>();
+builder.Services.AddTransient<GetCastById>();
+builder.Services.AddTransient<PostNewCast>();
+builder.Services.AddTransient<DeleteCast>();
 #endregion
 
 var app = builder.Build();
