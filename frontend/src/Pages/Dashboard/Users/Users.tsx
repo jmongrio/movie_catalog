@@ -1,10 +1,10 @@
-import { UserService } from "../Services/UserService";
-import { UserModel } from "../Models/UserModel";
-import { GeneralResponse } from "../Models/Response/GeneralResponse";
 import Swal from "sweetalert2";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { useAuth } from "../Auth/AuthProvider";
+import { useAuth } from "../../../Auth/AuthProvider";
+import { UserService } from "../../../Services/UserService";
+import { UserModel } from "../../../Models/UserModel";
+import { GeneralResponse } from "../../../Models/Response/GeneralResponse";
 
 export function Users() {
     const userService = new UserService();
@@ -52,8 +52,14 @@ export function Users() {
 
     return (
         <>
-            <div className="container">
-                <h1>Users</h1 >
+            <div className="container p-2">
+                <h1>User</h1 >
+                <div className="d-flex justify-content-end my-2">
+                    <Link to={"new-user"} className="btn btn-dark">
+                        <i className="bi bi-plus-lg me-1"></i>
+                        New
+                    </Link>
+                </div>
                 <div className="table-responsive bg-light p-4 rounded">
                     <table className="table table-striped shadow">
                         <thead>
@@ -74,7 +80,7 @@ export function Users() {
                                         <td>{user.rol}</td>
                                         <td>{user.email}</td>
                                         <td className="d-flex justify-content-evenly">
-                                            <Link to={"/"}>
+                                            <Link to={"edit-user/"+user.id}>
                                                 <i className="bi bi-pencil-square text-success"></i>
                                             </Link>
                                             <Link to={"/"}>
