@@ -12,7 +12,6 @@ export function Login() {
     const {isAuthenticated, setLoading} = useAuth();
 
     const submitForm = async (e: React.FormEvent<HTMLFormElement>) => {
-        console.log('submitForm')
         e.preventDefault()
         const formData = new FormData(e.currentTarget)
         const data = Object.fromEntries(formData)

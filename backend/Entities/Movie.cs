@@ -1,4 +1,5 @@
 ﻿using backend.Models.ENUM;
+using System.Text.Json.Serialization;
 
 namespace backend.Entities;
 
@@ -6,13 +7,15 @@ public partial class Movie
 {
     public int Id { get; set; }
 
-    public byte[]? PrimaryImage { get; set; }
+    public string? PrimaryImage { get; set; }
 
     public string? Name { get; set; }
 
     public string? Description { get; set; }
 
     public string? Trailer { get; set; }
+
+    public string? Quality { get; set; }
 
     public string? Director { get; set; }
 

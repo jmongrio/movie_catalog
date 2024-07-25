@@ -10,6 +10,7 @@ import { LoadingComponent } from './Components/LoadingComponent'
 import { ProtectedRoute } from './Components/ProtectedRoute'
 import { CreateUser } from './Pages/Dashboard/Users/CreateUser'
 import { EditUser } from './Pages/Dashboard/Users/EditUser'
+import { CreateMovie } from './Pages/Dashboard/Movies/CreateMovie'
 
 function App() {
   return (
@@ -21,8 +22,10 @@ function App() {
         <Route path="/dashboard" element={<ProtectedRoute />}>
             <Route path="/dashboard/user" element={<Users />} />,
             <Route path="/dashboard/user/new-user" element={<CreateUser />} />,
-            <Route path="/dashboard/user/edit-user/:id" element={<EditUser />} />,
+            <Route path="/dashboard/user/edit-user/:id" element={<EditUser />} />, 
             <Route path="/dashboard/l" element={<LoadingComponent />} />
+
+            <Route path="/dashboard/movie/create-movie" element={<CreateMovie />} />
         </Route>
 
       // Http codes

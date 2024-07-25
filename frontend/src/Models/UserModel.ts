@@ -1,7 +1,7 @@
 export class UserModel{
-    public id: number = 0
-    public firstName: string = ""
-    public lastName: string = ""
-    public email: string = ""
-    public rol: string = ""
+    public Id: number = 0
+    public FirstName: string = ""
+    public LastName: string = ""
+    public Email: string = ""
+    public Rol: string = ""
 }
