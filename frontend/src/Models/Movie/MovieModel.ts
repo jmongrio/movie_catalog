@@ -1,23 +1,28 @@
 import { ENTITY_STATUS } from "../ENUM/ENTITY_STATUS";
 
-export interface Movie {
-    Id: number;
-    PrimaryImage?: Uint8Array;
-    Name?: string;
-    Description?: string;
-    Trailer?: string;
-    Director?: string;
-    Rating?: number;
-    Premiere?: Date;
-    Duration?: string;
-    CreatedAt?: Date;
-    Status?: ENTITY_STATUS;
-    MovieCasts: MovieCast[];
-    MovieCategories: MovieCategory[];
-    MovieGenres: MovieGenre[];
-    MovieLikes: MovieLike[];
-    Reviews: Review[];
-    Watchlists: Watchlist[];
+export class MovieModel {
+    public Id: number = 0;
+    public PrimaryImage?: string = '';
+    public Name?: string = '';
+    public Description?: string = '';
+    public Trailer?: string = '';
+    public Quality?: string = '';
+    public Director?: string = '';
+    public Rating?: number = 0;
+    public Premiere?: Date = new Date();
+    public Duration?: string = '';
+    public CreatedAt?: Date = new Date();
+    public Status?: ENTITY_STATUS = ENTITY_STATUS.ACTIVE;
+    public MovieCasts?: MovieCast[] = new Array<MovieCast>();
+    public MovieCategories?: MovieCategory[] = new Array<MovieCategory>();
+    public MovieGenres?: MovieGenre[] = new Array<MovieGenre>();
+    public MovieLikes?: MovieLike[] = new Array<MovieLike>();
+    public Reviews?: Review[] = new Array<Review>();
+    public Watchlists?: Watchlist[] = new Array<Watchlist>();
+    
+    public MovieModel(id: number) {
+        this.Id = id;
+    }
 }
 
 export interface MovieCast {

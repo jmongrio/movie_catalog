@@ -74,16 +74,16 @@ export function Users() {
                         <tbody>
                             {users?.map((user: UserModel) => {
                                 return (
-                                    <tr className="text-center" key={user.id}>
-                                        <td>{user.firstName}</td>
-                                        <td>{user.lastName}</td>
-                                        <td>{user.rol}</td>
-                                        <td>{user.email}</td>
+                                    <tr className="text-center" key={user.Id}>
+                                        <td>{user.FirstName}</td>
+                                        <td>{user.LastName}</td>
+                                        <td>{user.Rol}</td>
+                                        <td>{user.Email}</td>
                                         <td className="d-flex justify-content-evenly">
-                                            <Link to={"edit-user/"+user.id}>
+                                            <Link to={`edit-user/${user.Id}`}>
                                                 <i className="bi bi-pencil-square text-success"></i>
                                             </Link>
-                                            <Link to={"/"}>
+                                            <Link to={`/${user.Id}`}>
                                                 <i className="bi bi-trash3 text-danger"></i>
                                             </Link>
                                         </td>

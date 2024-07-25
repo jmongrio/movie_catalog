@@ -1,20 +1,22 @@
 import { Link } from "react-router-dom";
 
 interface MovieHomeProps {
-    title: string;
-    year: number;
-    rating: number;
-    image: string;
-    quality: string;
+    id: number | undefined;
+    title: string | undefined;
+    year: Date;
+    rating: number | undefined;
+    image: string | undefined;
+    quality: string | undefined;
 }
 
 export function MovieHome(props: MovieHomeProps) {
+    const year = props.year instanceof Date ? props.year : new Date(props.year);
     return (
-        <Link to={"/"} className="card text-decoration-none" style={{ width: '15rem', border: 'none' }}>
+        <Link to={`/${props.id}`} className="card text-decoration-none" style={{ width: '15rem', border: 'none' }} key={props.id}>
             <div className="position-relative">
-                <img src={props.image} className="card-img-top" alt="..." />
+                <img src={props.image} className="card-img-top" alt="..." height={'320'}/>
                 <div className="position-absolute bottom-0 start-0 p-2">
-                    <span className="badge bg-warning">{props.year}</span>
+                    <span className="badge bg-warning">{year.getFullYear()}</span>
                 </div>
                 <div className="position-absolute top-0 start-0 p-2">
                     <span className="badge bg-danger">{props.quality}</span>

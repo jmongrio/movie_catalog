@@ -1,25 +1,71 @@
+import { useEffect, useState } from "react";
 import { MovieHome } from "../Components/MovieHome";
 import Navbar from "../Components/NavbarComponent";
+import { MovieModel } from "../Models/Movie/MovieModel";
+import { MovieService } from "../Services/MovieService";
+import { GeneralResponse } from "../Models/Response/GeneralResponse";
+import Swal from "sweetalert2";
+import { useAuth } from "../Auth/AuthProvider";
 
 export function Home() {
+    const movieService = new MovieService()
+    const [movies, setMovies] = useState<MovieModel[]>()
+    const { setLoading } = useAuth();
+
+    const fetchData = async () => {
+        setLoading(true);
+        await movieService.GetAll().then((response: GeneralResponse<MovieModel[]>) => {
+            if (response.StatusCode == 200) {
+                setMovies(response.Object);
+                console.log(response.Object);
+            }
+            else {
+                if (response.StatusCode <= 500) {
+                    Swal.fire({
+                        title: 'Error',
+                        text: response.Message,
+                        icon: 'error',
+                        confirmButtonText: 'Ok'
+                    })
+                }
+                else {
+                    Swal.fire({
+                        title: 'Warning',
+                        text: response.Message,
+                        icon: 'warning',
+                        confirmButtonText: 'Ok'
+                    })
+                }
+            }
+        }).catch(() => {
+            Swal.fire({
+                title: 'Error',
+                text: 'An error has occurred',
+                icon: 'error',
+                confirmButtonText: 'Ok'
+            })
+        })
+        setLoading(false)
+    }
+
+    useEffect(() => {
+        fetchData()
+    }, [])
+
     return (
         <>
             <Navbar />
             <main className="container">
                 <div className="row">
-                    <MovieHome
-                        title={"Nobody"}
-                        year={2022}
-                        rating={7.9}
-                        image={"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQaBUJOHmiD5YjxuvXd-zJfO3Rd7ke0EUl2dQ&s"}
-                        quality={"HD"} />
-                    <MovieHome
-                        title={"The Godfather"}
-                        year={1972}
-                        rating={8.0}
-                        image={"https://m.media-amazon.com/images/M/MV5BM2MyNjYxNmUtYTAwNi00MTYxLWJmNWYtYzZlODY3ZTk3OTFlXkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_QL75_UY281_CR4,0,190,281_.jpg"}
-                        quality={"HD"}
-                    />
+                    {movies?.map((movie) => (
+                        <MovieHome
+                            id={movie.Id}
+                            title={movie.Name}
+                            year={movie.Premiere ?? new Date()}
+                            rating={movie.Rating}
+                            image={movie.PrimaryImage}
+                            quality={movie.Quality} />
+                    ))}                  
                 </div>
             </main>
         </>

@@ -4,6 +4,7 @@ using backend.Models.Response;
 using backend.Utils;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Text;
 
 namespace backend.Services.Movie
 {
@@ -30,7 +31,7 @@ namespace backend.Services.Movie
             {
                 _logger.LogStart(httpContext);
 
-                Entities.Movie newMovie = await _httpUtils.GetBodyRequest<Entities.Movie>(httpContext);
+                MovieRequestModel newMovie = await _httpUtils.GetBodyRequest<MovieRequestModel>(httpContext);
                 _logger.LogObjectInformation(httpContext, newMovie);
                 if (newMovie is null)
                 {
@@ -44,14 +45,28 @@ namespace backend.Services.Movie
                     return new OkObjectResult(response);
                 }
 
-                await _context.Movies.AddAsync(newMovie);
+                Entities.Movie movieToSave = new()
+                {
+                    PrimaryImage = newMovie.PrimaryImage,
+                    Name = newMovie.Name,
+                    Description = newMovie.Description,
+                    Quality = newMovie.Quality,
+                    Trailer = newMovie.Trailer,
+                    Director = newMovie.Director,
+                    Rating = newMovie.Rating,
+                    Premiere = newMovie.Premiere,
+                    Duration = newMovie.Duration,
+                    CreatedAt = DateTime.UtcNow.AddHours(-6)
+                };
+
+                await _context.Movies.AddAsync(movieToSave);
                 await _context.SaveChangesAsync();
 
                 response = new()
                 {
                     StatusCode = 201,
                     Message = "Movie created",
-                    Object = newMovie
+                    Object = movieToSave
                 };
 
                 return new OkObjectResult(response);
