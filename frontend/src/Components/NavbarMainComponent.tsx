@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { LoginAndLogoutButton } from './LoginAndLogoutButton';
 
-export default function NavbarComponent() {
+export default function NavbarMainComponent() {
   return (
     <header className="p-3 bg-dark text-white mb-3">
       <div className="container">

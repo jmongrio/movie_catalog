@@ -58,7 +58,16 @@ namespace backend.Services.Movie
                     return new OkObjectResult(response);
                 }
 
-                movie = movieEdit;
+                movie.Name = movieEdit.Name;
+                movie.PrimaryImage = movieEdit.PrimaryImage;
+                movie.Description = movieEdit.Description;
+                movie.Trailer = movieEdit.Trailer;
+                movie.Quality = movieEdit.Quality;
+                movie.Director = movieEdit.Director;
+                movie.Rating = movieEdit.Rating;
+                movie.Premiere = movieEdit.Premiere;
+                movie.Duration = movieEdit.Duration;
+
                 await _context.SaveChangesAsync();
 
                 response = new()

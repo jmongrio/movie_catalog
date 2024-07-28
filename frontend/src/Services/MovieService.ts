@@ -43,4 +43,18 @@ export class MovieService{
             return response.json();
         })
     }
+
+    public async Update(movie: MovieModel, id: number): Promise<GeneralResponse<MovieModel>> {
+        return await fetch(`${apiUrl}/Movie/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            credentials: 'include',
+            body: JSON.stringify(movie)
+        })
+        .then((response: Response) => {
+            return response.json();
+        })
+    }
 }

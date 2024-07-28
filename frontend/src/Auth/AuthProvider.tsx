@@ -9,13 +9,15 @@ interface AuthContextType {
     isAuthenticated: boolean;
     loading: boolean;
     setLoading: (loading: boolean) => void;
+    setIsAuthenticated: (isAuthenticated: boolean) => void;
     logout: () => void;
 }
 
 const AuthContext = createContext<AuthContextType>({
     isAuthenticated: false,
-    loading: true,
+    loading: false,
     setLoading: () => {},
+    setIsAuthenticated: () => {},
     logout: () => {}
 });
 
@@ -30,7 +32,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
     useEffect(() => {
         const token = Cookie.get('AT')
-        console.log("update")
 
         if (token) {
             setIsAuthenticated(true);
@@ -42,7 +43,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
     return (
         <>
-            <AuthContext.Provider value={{ isAuthenticated, loading, setLoading, logout }}>
+            <AuthContext.Provider value={{ isAuthenticated, setIsAuthenticated, loading, setLoading, logout }}>
                 {children}
             </AuthContext.Provider>
         </>

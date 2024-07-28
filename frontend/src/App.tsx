@@ -1,31 +1,41 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
+// Login
 import { Login } from './Pages/Access/Login'
 import { Signup } from './Pages/Access/Signup'
-import { Home } from './Pages/Home'
-import { Users } from './Pages/Dashboard/Users/Users'
+// Movie
+import { HomeMovie } from './Pages/HomeMovie'
+import { MovieDetail } from './Pages/MovieDetail'
+import { CreateMovie } from './Pages/Dashboard/Movies/CreateMovie'
+// Shared
+import { ProtectedRoute } from './Components/ProtectedRoute'
 import { NotFound } from './Pages/HttpCodes/NotFound'
 import { Forbidden } from './Pages/HttpCodes/Forbidden'
 import { Unauthorized } from './Pages/HttpCodes/Unauthorized'
 import { LoadingComponent } from './Components/LoadingComponent'
-import { ProtectedRoute } from './Components/ProtectedRoute'
+// User
+import { Users } from './Pages/Dashboard/Users/Users'
 import { CreateUser } from './Pages/Dashboard/Users/CreateUser'
 import { EditUser } from './Pages/Dashboard/Users/EditUser'
-import { CreateMovie } from './Pages/Dashboard/Movies/CreateMovie'
+import { MoviesDashboard } from './Pages/Dashboard/Movies/MoviesDashboard'
+import { MovieDetailDashboard } from './Pages/Dashboard/Movies/MovieDetailDashboard'
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<HomeMovie />}/>
+        <Route path="/movie/:id" element={<MovieDetail />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/dashboard" element={<ProtectedRoute />}>
-            <Route path="/dashboard/user" element={<Users />} />,
+            <Route path="/dashboard/user" element={<Users />}/>,
             <Route path="/dashboard/user/new-user" element={<CreateUser />} />,
             <Route path="/dashboard/user/edit-user/:id" element={<EditUser />} />, 
             <Route path="/dashboard/l" element={<LoadingComponent />} />
 
-            <Route path="/dashboard/movie/create-movie" element={<CreateMovie />} />
+            <Route path="/dashboard/movie/create-movie/:id" element={<CreateMovie />} />
+            <Route path="/dashboard/movie" element={<MoviesDashboard />} />
+            <Route path="/dashboard/movie/:id" element={<MovieDetailDashboard />} />
         </Route>
 
       // Http codes

@@ -12,7 +12,7 @@ interface MovieHomeProps {
 export function MovieHome(props: MovieHomeProps) {
     const year = props.year instanceof Date ? props.year : new Date(props.year);
     return (
-        <Link to={`/${props.id}`} className="card text-decoration-none" style={{ width: '15rem', border: 'none' }} key={props.id}>
+        <Link to={`/movie/${props.id}`} className="card text-decoration-none" style={{ width: '15rem', border: 'none' }} key={props.id}>
             <div className="position-relative">
                 <img src={props.image} className="card-img-top" alt="..." height={'320'}/>
                 <div className="position-absolute bottom-0 start-0 p-2">
