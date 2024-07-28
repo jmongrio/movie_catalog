@@ -3,14 +3,14 @@ import { Link } from "react-router-dom";
 interface MovieHomeProps {
     id: number | undefined;
     title: string | undefined;
-    year: Date;
+    year: string;
     rating: number | undefined;
     image: string | undefined;
     quality: string | undefined;
 }
 
 export function MovieDashboard(props: MovieHomeProps) {
-    const year = props.year instanceof Date ? props.year : new Date(props.year);
+    const year = new Date(props.year);
     return (
         <>
             <Link to={`/dashboard/movie/${props.id}`} className="card text-decoration-none" style={{ width: '15rem', border: 'none' }} key={props.id}>

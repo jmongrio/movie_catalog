@@ -58,7 +58,7 @@ export function MoviesDashboard() {
                         <MovieDashboard
                             id={movie.Id}
                             title={movie.Name}
-                            year={movie.Premiere ?? new Date()}
+                            year={movie.Premiere ?? ""}
                             rating={movie.Rating}
                             image={movie.PrimaryImage}
                             quality={movie.Quality} />
