@@ -9,6 +9,8 @@ export function LoginAndLogoutButton() {
 
     return isAuthenticated ? (
         <div className="text-end">
+            <Link to={"/dashboard"} className="btn btn-outline-primary me-2">Dashboard</Link>
+            <Link to={"/"} className="btn btn-outline-primary me-2">Home</Link>
             <Link to={"/"} onClick={logout} className="btn btn-outline-light me-2">Logout</Link>
         </div>
     ) : (

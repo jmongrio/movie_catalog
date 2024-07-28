@@ -1,4 +1,4 @@
-import Navbar from "../../Components/NavbarComponent";
+import Navbar from "../../Components/NavbarMainComponent";
 
 export function Signup() {
     return (

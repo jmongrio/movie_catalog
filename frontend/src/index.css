@@ -19,3 +19,7 @@
     width: auto;
     border-radius: 10px;
 }
+
+.bg-default{
+    background-color: #f8f9fa;
+}

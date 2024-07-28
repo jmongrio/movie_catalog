@@ -1,4 +1,5 @@
 ﻿using backend.DBContext;
+using backend.Models.ENUM;
 using backend.Models.Movie;
 using backend.Models.Response;
 using backend.Utils;
@@ -56,6 +57,7 @@ namespace backend.Services.Movie
                     Rating = newMovie.Rating,
                     Premiere = newMovie.Premiere,
                     Duration = newMovie.Duration,
+                    Status = ENTITY_STATUS.ACTIVE,
                     CreatedAt = DateTime.UtcNow.AddHours(-6)
                 };
 

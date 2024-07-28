@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import { MovieHome } from "../Components/MovieHome";
-import Navbar from "../Components/NavbarComponent";
 import { MovieModel } from "../Models/Movie/MovieModel";
 import { MovieService } from "../Services/MovieService";
 import { GeneralResponse } from "../Models/Response/GeneralResponse";
 import Swal from "sweetalert2";
 import { useAuth } from "../Auth/AuthProvider";
+import NavbarMainComponent from "../Components/NavbarMainComponent";
 
-export function Home() {
+export function HomeMovie() {
     const movieService = new MovieService()
     const [movies, setMovies] = useState<MovieModel[]>()
     const { setLoading } = useAuth();
@@ -17,7 +17,6 @@ export function Home() {
         await movieService.GetAll().then((response: GeneralResponse<MovieModel[]>) => {
             if (response.StatusCode == 200) {
                 setMovies(response.Object);
-                console.log(response.Object);
             }
             else {
                 if (response.StatusCode <= 500) {
@@ -54,7 +53,7 @@ export function Home() {
 
     return (
         <>
-            <Navbar />
+            <NavbarMainComponent />
             <main className="container">
                 <div className="row">
                     {movies?.map((movie) => (

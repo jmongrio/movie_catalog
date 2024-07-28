@@ -17,7 +17,6 @@ export function EditUser() {
         if (id != undefined) {
             await userService.GetById(parseInt(id)).then((response: GeneralResponse<UserModel>) => {
                 if (response.StatusCode == 200) {
-                    // console.log(response);
                     setUsers(response.Object);
                 }
                 else {
@@ -55,21 +54,21 @@ export function EditUser() {
     }, [id]);
 
     return (
-        <div className="container fluid mt-5">
-            <div className="col-md-6 mx-auto bg-light p-5 rounded-4">
+        <div className="container fluid">
+            <div className="col-md-6 mx-auto bg-light px-5 py-2 rounded-4">
                 <h1 className="h3 mb-2">Edit</h1>
                 <form>
                     <div className="mb-3">
                         <label htmlFor="txtName" className="form-label">Name</label>
-                        <input type="text" className="form-control" id="txtName" value={userData?.firstName }/>
+                        <input type="text" className="form-control" id="txtName" value={userData?.FirstName }/>
                     </div>
                     <div className="mb-3">
                         <label htmlFor="txtName" className="form-label">Last name</label>
-                        <input type="text" className="form-control" id="txtName" value={userData?.lastName }/>
+                        <input type="text" className="form-control" id="txtName" value={userData?.LastName }/>
                     </div>
                     <div className="mb-3">
                         <label htmlFor="txtEmail" className="form-label">Email</label>
-                        <input type="email" className="form-control" id="txtEmail" value={userData?.email}/>
+                        <input type="email" className="form-control" id="txtEmail" value={userData?.Email}/>
                     </div>
                     <div className="mb-3">
                         <label htmlFor="slctRol" className="form-label">Rol</label>
