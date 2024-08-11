@@ -57,10 +57,10 @@ export function HomeMovie() {
             <main className="container">
                 <div className="row">
                     {movies?.map((movie) => (
-                        <MovieHome
+                        <MovieHome key={movie.Id}
                             id={movie.Id}
                             title={movie.Name}
-                            year={movie.Premiere ?? new Date()}
+                            year={movie.Premiere ?? ''}
                             rating={movie.Rating}
                             image={movie.PrimaryImage}
                             quality={movie.Quality} />

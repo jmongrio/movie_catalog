@@ -3,16 +3,17 @@ import { Link } from "react-router-dom";
 interface MovieHomeProps {
     id: number | undefined;
     title: string | undefined;
-    year: Date;
+    year: string;
     rating: number | undefined;
     image: string | undefined;
     quality: string | undefined;
 }
 
 export function MovieHome(props: MovieHomeProps) {
-    const year = props.year instanceof Date ? props.year : new Date(props.year);
+    const year = new Date(props.year);
+
     return (
-        <Link to={`/movie/${props.id}`} className="card text-decoration-none" style={{ width: '15rem', border: 'none' }} key={props.id}>
+        <Link to={`/movie/${props.id}`} className="card text-decoration-none" style={{ width: '15rem', border: 'none' }}>
             <div className="position-relative">
                 <img src={props.image} className="card-img-top" alt="..." height={'320'}/>
                 <div className="position-absolute bottom-0 start-0 p-2">

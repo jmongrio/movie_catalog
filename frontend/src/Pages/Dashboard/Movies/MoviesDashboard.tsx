@@ -55,10 +55,10 @@ export function MoviesDashboard() {
                 <div className="row">
                     <h1 className="h2 mb-2">Movies</h1>
                     {movies?.map((movie) => (
-                        <MovieDashboard
+                        <MovieDashboard key={movie.Id}
                             id={movie.Id}
                             title={movie.Name}
-                            year={movie.Premiere ?? new Date()}
+                            year={movie.Premiere ?? ''}
                             rating={movie.Rating}
                             image={movie.PrimaryImage}
                             quality={movie.Quality} />
