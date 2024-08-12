@@ -1,8 +1,6 @@
-﻿using Azure;
-using backend.DBContext;
+﻿using backend.DBContext;
 using backend.Models.ENUM;
 using backend.Models.Response;
-using backend.Models.UserApp;
 using backend.Utils;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
