@@ -2,6 +2,7 @@ using backend.DBContext;
 using backend.Services.Access;
 using backend.Services.Cast;
 using backend.Services.Movie;
+using backend.Services.Rol;
 using backend.Services.UserApp;
 using backend.Utils;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -14,7 +15,6 @@ using System.Text.Json.Serialization;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
 builder.Services.AddControllers();
 builder.Services.AddControllers().AddJsonOptions(options =>
 {
@@ -111,6 +111,14 @@ builder.Services.AddTransient<GetAllMovies>();
 builder.Services.AddTransient<GetMovieById>();
 builder.Services.AddTransient<PostNewMovie>();
 builder.Services.AddTransient<PutMovie>();
+#endregion
+
+# region DI Rol
+builder.Services.AddTransient<GetAllRoles>();
+builder.Services.AddTransient<GetRolById>();
+builder.Services.AddTransient<PostNewRol>();
+builder.Services.AddTransient<PutRol>();
+builder.Services.AddTransient<DeleteRol>();
 #endregion
 
 #region DI Cast

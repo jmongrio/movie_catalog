@@ -1,17 +1,18 @@
 ﻿using backend.DBContext;
+using backend.Models.ENUM;
 using backend.Models.Response;
 using backend.Utils;
 using Microsoft.AspNetCore.Mvc;
 
-namespace backend.Services.Movie
+namespace backend.Services.Rol
 {
-    public class PutMovie
+    public class DeleteRol
     {
         private readonly MovieCatalogContext _context;
         private readonly LogManager _logger;
         private readonly HttpContextUtils _httpUtils;
 
-        public PutMovie(
+        public DeleteRol(
             MovieCatalogContext context,
             LogManager logger,
             HttpContextUtils httpUtils)
@@ -21,61 +22,51 @@ namespace backend.Services.Movie
             _httpUtils = httpUtils;
         }
 
-        public async Task<IActionResult> EditMovie(HttpContext httpContext)
+        public async Task<IActionResult> Delete(HttpContext httpContext)
         {
-            GeneralResponse<Entities.Movie> response = new();
+            GeneralResponse<Entities.Rol> response = new();
             try
             {
                 _logger.LogStart(httpContext);
 
-                Entities.Movie movieEdit = await _httpUtils.GetBodyRequest<Entities.Movie>(httpContext);
-                _logger.LogObjectInformation(httpContext, movieEdit);
-
                 int id = _httpUtils.GetIntParam(httpContext, "id");
-                _logger.LogInformation(httpContext, $"Searching movie with id: {id}");
+                _logger.LogInformation(httpContext, $"Searching rol with id: {id}");
                 if (id.Equals(0))
                 {
                     response = new()
                     {
                         StatusCode = 400,
-                        Message = "Invalid movie id",
+                        Message = "Invalid rol id",
                         Object = null
                     };
                     return new OkObjectResult(response);
                 }
 
-                Entities.Movie? movie = await _context.Movies.FindAsync(id);
-                _logger.LogObjectInformation(httpContext, movie);
-                if (movie is null)
+                Entities.Rol? rol = await _context.Rols.FindAsync(id);
+                _logger.LogObjectInformation(httpContext, rol);
+                if (rol is null)
                 {
-                    _logger.LogInformation(httpContext, "Movie not found");
+                    _logger.LogInformation(httpContext, "Rol not found");
                     response = new()
                     {
                         StatusCode = 404,
-                        Message = "Movie not found",
+                        Message = "Rol not found",
                         Object = null
                     };
                     return new OkObjectResult(response);
                 }
 
-                movie.Name = movieEdit.Name;
-                movie.PrimaryImage = movieEdit.PrimaryImage;
-                movie.Description = movieEdit.Description;
-                movie.Trailer = movieEdit.Trailer;
-                movie.Quality = movieEdit.Quality;
-                movie.Director = movieEdit.Director;
-                movie.Rating = movieEdit.Rating;
-                movie.Premiere = movieEdit.Premiere;
-                movie.Duration = movieEdit.Duration;
+                rol.Status = (int) ENTITY_STATUS.DELETED;
 
                 await _context.SaveChangesAsync();
 
                 response = new()
                 {
                     StatusCode = 204,
-                    Message = "Movie edited successfully",
-                    Object = movie
+                    Message = "Rol deleted successfully",
+                    Object = rol
                 };
+
                 return new OkObjectResult(response);
             }
             catch (Exception ex)
@@ -84,7 +75,7 @@ namespace backend.Services.Movie
                 response = new()
                 {
                     StatusCode = 500,
-                    Message = $"TraceId: {httpContext.TraceIdentifier}\nAn error occurred while editing user",
+                    Message = $"TraceId: {httpContext.TraceIdentifier}\nAn error occurred while deleting rol",
                     Object = null
                 };
                 return new OkObjectResult(response);

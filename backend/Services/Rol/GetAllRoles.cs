@@ -5,60 +5,52 @@ using backend.Utils;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace backend.Services.Movie
+namespace backend.Services.Rol
 {
-    public class GetMovieById
+    public class GetAllRoles
     {
         private readonly MovieCatalogContext _context;
         private readonly LogManager _logger;
-        private readonly HttpContextUtils _httpUtils;
 
-        public GetMovieById(
+        public GetAllRoles(
             MovieCatalogContext context,
-            LogManager logger,
-            HttpContextUtils httpUtils)
+            LogManager logger)
         {
             _context = context;
             _logger = logger;
-            _httpUtils = httpUtils;
         }
 
-        public async Task<IActionResult> GetById(HttpContext httpContext)
+        public async Task<IActionResult> GetAll(HttpContext httpContext)
         {
-            GeneralResponse<Entities.Movie> response = new();
+            GeneralResponse<IEnumerable<Entities.Rol>> response = new();
             try
             {
                 _logger.LogStart(httpContext);
 
-                int id = _httpUtils.GetIntParam(httpContext, "id");
-                _logger.LogInformation(httpContext, $"Searching movie with id: {id}");
+                IEnumerable<Entities.Rol> roles = 
+                    await _context.Rols.Where(x => 
+                                                   x.Status.Equals(ENTITY_STATUS.ACTIVE))
+                                       .ToListAsync();
+                _logger.LogObjectInformation(httpContext, roles);
 
-                Entities.Movie? movie =
-                    await _context.Movies.Where(x => 
-                                                    x.Status.Equals(ENTITY_STATUS.ACTIVE) && 
-                                                    x.Id.Equals(id))
-                                         .FirstOrDefaultAsync();
-                _logger.LogObjectInformation(httpContext, movie);
-
-                if (movie is null)
+                if (!roles.Any())
                 {
-                    _logger.LogInformation(httpContext, "Movie not found");
                     response = new()
                     {
                         StatusCode = 404,
-                        Message = "Movie not found",
+                        Message = "Roles not found",
                         Object = null
                     };
-
                     return new OkObjectResult(response);
-                }
+                }                
 
                 response = new()
                 {
                     StatusCode = 200,
                     Message = "Success",
-                    Object = movie!
+                    Object = roles
                 };
+
                 return new OkObjectResult(response);
             }
             catch (Exception ex)
@@ -67,7 +59,7 @@ namespace backend.Services.Movie
                 response = new()
                 {
                     StatusCode = 500,
-                    Message = $"TraceId: {httpContext.TraceIdentifier} \nAn error occurred while obtaining movie by id",
+                    Message = $"TraceId: {httpContext.TraceIdentifier} \nAn error occurred while obtaining roles",
                     Object = null
                 };
 

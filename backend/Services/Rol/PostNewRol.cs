@@ -1,19 +1,19 @@
 ﻿using backend.DBContext;
 using backend.Models.ENUM;
 using backend.Models.Response;
+using backend.Models.Rol;
 using backend.Utils;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
-namespace backend.Services.Movie
+namespace backend.Services.Rol
 {
-    public class GetMovieById
+    public class PostNewRol
     {
         private readonly MovieCatalogContext _context;
         private readonly LogManager _logger;
         private readonly HttpContextUtils _httpUtils;
 
-        public GetMovieById(
+        public PostNewRol(
             MovieCatalogContext context,
             LogManager logger,
             HttpContextUtils httpUtils)
@@ -23,42 +23,43 @@ namespace backend.Services.Movie
             _httpUtils = httpUtils;
         }
 
-        public async Task<IActionResult> GetById(HttpContext httpContext)
+        public async Task<IActionResult> New(HttpContext httpContext)
         {
-            GeneralResponse<Entities.Movie> response = new();
+            GeneralResponse<Entities.Rol> response = new();
             try
             {
                 _logger.LogStart(httpContext);
 
-                int id = _httpUtils.GetIntParam(httpContext, "id");
-                _logger.LogInformation(httpContext, $"Searching movie with id: {id}");
-
-                Entities.Movie? movie =
-                    await _context.Movies.Where(x => 
-                                                    x.Status.Equals(ENTITY_STATUS.ACTIVE) && 
-                                                    x.Id.Equals(id))
-                                         .FirstOrDefaultAsync();
-                _logger.LogObjectInformation(httpContext, movie);
-
-                if (movie is null)
+                RolRequestModel newRol = await _httpUtils.GetBodyRequest<RolRequestModel>(httpContext);
+                _logger.LogObjectInformation(httpContext, newRol);
+                if (newRol is null)
                 {
-                    _logger.LogInformation(httpContext, "Movie not found");
+                    _logger.LogInformation(httpContext, "Invalid rol data");
                     response = new()
                     {
-                        StatusCode = 404,
-                        Message = "Movie not found",
+                        StatusCode = 400,
+                        Message = "Invalid rol data",
                         Object = null
                     };
-
                     return new OkObjectResult(response);
                 }
 
+                Entities.Rol rolToSave = new()
+                {
+                    Name = newRol.Name,
+                    Status = (int?)ENTITY_STATUS.ACTIVE
+                };
+
+                await _context.Rols.AddAsync(rolToSave);
+                await _context.SaveChangesAsync();
+
                 response = new()
                 {
-                    StatusCode = 200,
-                    Message = "Success",
-                    Object = movie!
+                    StatusCode = 201,
+                    Message = "Rol created successfully",
+                    Object = rolToSave
                 };
+
                 return new OkObjectResult(response);
             }
             catch (Exception ex)
@@ -67,11 +68,10 @@ namespace backend.Services.Movie
                 response = new()
                 {
                     StatusCode = 500,
-                    Message = $"TraceId: {httpContext.TraceIdentifier} \nAn error occurred while obtaining movie by id",
+                    Message = $"TraceId: {httpContext.TraceIdentifier}\nAn error occurred while creating rol",
                     Object = null
                 };
-
-                return new ObjectResult(response);
+                return new OkObjectResult(response);
             }
             finally
             {

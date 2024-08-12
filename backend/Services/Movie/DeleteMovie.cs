@@ -5,13 +5,13 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace backend.Services.Movie
 {
-    public class PutMovie
+    public class DeleteMovie
     {
         private readonly MovieCatalogContext _context;
         private readonly LogManager _logger;
         private readonly HttpContextUtils _httpUtils;
 
-        public PutMovie(
+        public DeleteMovie(
             MovieCatalogContext context,
             LogManager logger,
             HttpContextUtils httpUtils)
@@ -21,15 +21,12 @@ namespace backend.Services.Movie
             _httpUtils = httpUtils;
         }
 
-        public async Task<IActionResult> EditMovie(HttpContext httpContext)
+        public async Task<IActionResult> Delete(HttpContext httpContext)
         {
             GeneralResponse<Entities.Movie> response = new();
             try
             {
                 _logger.LogStart(httpContext);
-
-                Entities.Movie movieEdit = await _httpUtils.GetBodyRequest<Entities.Movie>(httpContext);
-                _logger.LogObjectInformation(httpContext, movieEdit);
 
                 int id = _httpUtils.GetIntParam(httpContext, "id");
                 _logger.LogInformation(httpContext, $"Searching movie with id: {id}");
@@ -58,23 +55,15 @@ namespace backend.Services.Movie
                     return new OkObjectResult(response);
                 }
 
-                movie.Name = movieEdit.Name;
-                movie.PrimaryImage = movieEdit.PrimaryImage;
-                movie.Description = movieEdit.Description;
-                movie.Trailer = movieEdit.Trailer;
-                movie.Quality = movieEdit.Quality;
-                movie.Director = movieEdit.Director;
-                movie.Rating = movieEdit.Rating;
-                movie.Premiere = movieEdit.Premiere;
-                movie.Duration = movieEdit.Duration;
+                movie.Status = Models.ENUM.ENTITY_STATUS.DELETED;
 
                 await _context.SaveChangesAsync();
 
                 response = new()
                 {
-                    StatusCode = 204,
-                    Message = "Movie edited successfully",
-                    Object = movie
+                    StatusCode = 201,
+                    Message = "Movie delete successfully",
+                    Object = new()
                 };
                 return new OkObjectResult(response);
             }
@@ -84,7 +73,7 @@ namespace backend.Services.Movie
                 response = new()
                 {
                     StatusCode = 500,
-                    Message = $"TraceId: {httpContext.TraceIdentifier}\nAn error occurred while editing user",
+                    Message = $"TraceId: {httpContext.TraceIdentifier}\nAn error occurred while deleting user",
                     Object = null
                 };
                 return new OkObjectResult(response);
